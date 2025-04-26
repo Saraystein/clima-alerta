@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% block title %}Sobre - Conexão Climática{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div class="card shadow">
+    <div class="card-body">
+      <div class="d-flex align-items-center mb-4">
+        <img src="{{ url_for('static', filename='imgs/avatar.png') }}" class="rounded-circle me-3" width="80" height="80" alt="Criador">
+        <div>
+          <h5 class="mb-0">Gustavo Silva</h5>
+          <span class="badge bg-warning text-dark">🚧 Em desenvolvimento</span>
+        </div>
+      </div>
+
+      <section class="mb-4">
+        <h6 class="text-primary"><i class="fas fa-sun me-2"></i>O que é o Conexão Climática?</h6>
+        <p>O Conexão Climática é uma plataforma inteligente de consulta do tempo, projetada para estudantes, professores e qualquer pessoa que deseje se preparar melhor para as mudanças climáticas no dia a dia.</p>
+      </section>
+
+      <section class="mb-4">
+        <h6 class="text-primary"><i class="fas fa-bullseye me-2"></i>Objetivo</h6>
+        <p>Entregar previsões climáticas em tempo real, recomendações personalizadas de vestuário e uma interface acessível para tomada de decisões baseadas no clima.</p>
+      </section>
+
+      <section class="mb-4">
+        <h6 class="text-primary"><i class="fas fa-code me-2"></i>Tecnologias Utilizadas</h6>
+        <ul class="list-unstyled">
+          <li>🌐 HTML, CSS, JS (Frontend)</li>
+          <li>🎨 Bootstrap 5 para layout responsivo</li>
+          <li>🧠 Flask (Python) no Backend</li>
+          <li>☁️ API OpenWeatherMap para dados meteorológicos</li>
+          <li>📊 Chart.js para gráficos futuros</li>
+        </ul>
+      </section>
+
+      <section class="mb-3">
+        <h6 class="text-primary"><i class="fas fa-share-alt me-2"></i>Redes Sociais</h6>
+        <p class="mb-0">
+          <a href="https://github.com/seu-usuario" class="text-decoration-none me-3" target="_blank">
+            <i class="fab fa-github me-1"></i>GitHub
+          </a>
+          <a href="https://linkedin.com/in/seu-usuario" class="text-decoration-none me-3" target="_blank">
+            <i class="fab fa-linkedin me-1"></i>LinkedIn
+          </a>
+          <a href="https://instagram.com/seu-usuario" class="text-decoration-none" target="_blank">
+            <i class="fab fa-instagram me-1"></i>Instagram
+          </a>
+        </p>
+      </section>
+    </div>
+  </div>
+</div>
+{% endblock %}

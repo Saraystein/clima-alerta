@@ -1,0 +1,24 @@
+body {
+  background: #f8f9fa;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.card {
+  border-radius: 10px;
+}
+
+form input {
+  border-radius: 5px;
+}
+
+.card img {
+  margin-bottom: 5px;
+}
+
+.card h6 {
+  font-size: 0.9rem;
+}
+
+iframe {
+  border-radius: 10px;
+}

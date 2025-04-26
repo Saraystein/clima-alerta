@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Teste Gráfico Dinâmico</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    .btn-group button.active {
+      background-color: #0d6efd;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <div class="mb-3 text-center">
+    <div class="btn-group" role="group">
+      <button type="button" class="btn" data-tipo="temp">🌡️ Temperatura</button>
+      <button type="button" class="btn" data-tipo="umidade">💧 Umidade</button>
+      <button type="button" class="btn" data-tipo="vento">💨 Vento</button>
+    </div>
+  </div>
+
+  <canvas id="graficoClima" width="600" height="300"></canvas>
+
+</div>
+
+<script>
+  // Simulação de dados da previsão
+  window.dadosPrevisao = [
+    { dt_txt: "2025-04-25 12:00:00", main: { temp: 25, humidity: 80 }, wind: { speed: 3.0 } },
+    { dt_txt: "2025-04-25 15:00:00", main: { temp: 27, humidity: 75 }, wind: { speed: 3.5 } },
+    { dt_txt: "2025-04-25 18:00:00", main: { temp: 23, humidity: 85 }, wind: { speed: 2.0 } },
+    { dt_txt: "2025-04-25 21:00:00", main: { temp: 22, humidity: 90 }, wind: { speed: 1.5 } }
+  ];
+</script>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const canvas = document.getElementById("graficoClima");
+    const botoes = document.querySelectorAll("[data-tipo]");
+    const previsao = window.dadosPrevisao || [];
+
+    if (!canvas || !previsao.length) return;
+
+    const ctx = canvas.getContext("2d");
+    const horarios = previsao.map(item => item.dt_txt.split(" ")[1].slice(0, 5));
+
+    const titulos = {
+      temp: "Temperatura (°C)",
+      umidade: "Umidade (%)",
+      vento: "Vento (km/h)"
+    };
+
+    const extrairDados = (tipo) => {
+      return previsao.map(item => {
+        if (tipo === "temp") return item.main.temp;
+        if (tipo === "umidade") return item.main.humidity;
+        if (tipo === "vento") return (item.wind.speed * 3.6).toFixed(1);
+        return null;
+      });
+    };
+
+    let tipoAtual = "temp";
+
+    const grafico = new Chart(ctx, {
+      type: "line",
+      data: {
+        labels: horarios,
+        datasets: [{
+          label: titulos[tipoAtual],
+          data: extrairDados(tipoAtual),
+          borderColor: "#0d6efd",
+          backgroundColor: "rgba(13,110,253,0.2)",
+          fill: true,
+          tension: 0.4,
+          pointRadius: 4,
+          pointHoverRadius: 6
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          tooltip: {
+            callbacks: {
+              label: context => `${context.parsed.y} ${titulos[tipoAtual].split(" ")[1]}`
+            }
+          },
+          legend: {
+            labels: { font: { size: 14 } }
+          }
+        },
+        scales: {
+          y: {
+            title: {
+              display: true,
+              text: titulos[tipoAtual]
+            }
+          },
+          x: {
+            title: {
+              display: true,
+              text: "Horário"
+            }
+          }
+        }
+      }
+    });
+
+    botoes.forEach(botao => {
+      botao.addEventListener("click", () => {
+        tipoAtual = botao.dataset.tipo;
+
+        botoes.forEach(b => b.classList.remove("active"));
+        botao.classList.add("active");
+
+        grafico.data.datasets[0].data = extrairDados(tipoAtual);
+        grafico.data.datasets[0].label = titulos[tipoAtual];
+        grafico.options.scales.y.title.text = titulos[tipoAtual];
+        grafico.options.plugins.tooltip.callbacks.label = context => `${context.parsed.y} ${titulos[tipoAtual].split(" ")[1]}`;
+        grafico.update();
+      });
+    });
+  });
+</script>
+
+</body>
+</html>
