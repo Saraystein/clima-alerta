@@ -3,13 +3,34 @@
 
 {% block content %}
 <div class="container">
-  <h2 class="fw-bold mb-3">📰 Notícias Climáticas</h2>
-  <p>
-    Em breve, esta seção exibirá notícias relacionadas ao clima e eventos meteorológicos na cidade pesquisada.
-  </p>
+  <h2 class="fw-bold mb-4">📰 Notícias Climáticas sobre <span class="text-primary">{{ cidade }}</span></h2>
 
-  <div class="alert alert-info mt-4">
-    <i class="fas fa-clock"></i> Funcionalidade em desenvolvimento. Fique ligado!
-  </div>
+  {% if noticias and noticias|length > 0 %}
+    <div class="row">
+      {% for noticia in noticias %}
+      <div class="col-md-6 col-lg-4 mb-4">
+        <div class="card h-100 shadow-sm">
+          {% if noticia.urlToImage %}
+          <img src="{{ noticia.urlToImage }}" class="card-img-top" alt="Imagem da notícia">
+          {% endif %}
+          <div class="card-body d-flex flex-column">
+            <h5 class="card-title">{{ noticia.title }}</h5>
+            <p class="card-text">{{ noticia.description }}</p>
+            <a href="{{ noticia.url }}" class="btn btn-outline-primary mt-auto" target="_blank">
+              Ler mais <i class="fas fa-external-link-alt"></i>
+            </a>
+          </div>
+          <div class="card-footer text-muted small">
+            {{ noticia.publishedAt[:10] | replace('-', '/') }}
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="alert alert-info">
+      Nenhuma notícia encontrada para <strong>{{ cidade }}</strong>. Tente outra cidade!
+    </div>
+  {% endif %}
 </div>
 {% endblock %}

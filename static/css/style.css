@@ -1,24 +1,67 @@
 body {
-  background: #f8f9fa;
+  background-color: #f8f9fa;
   font-family: 'Segoe UI', sans-serif;
 }
 
+/* Botão hover */
+.btn-outline-secondary:hover {
+  background-color: #0d6efd;
+  color: #fff;
+}
+
+/* Card clima + gráfico */
 .card {
+  border: none;
   border-radius: 10px;
+  transition: box-shadow 0.3s ease;
 }
 
-form input {
-  border-radius: 5px;
+.card:hover {
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.1);
 }
 
-.card img {
-  margin-bottom: 5px;
-}
-
-.card h6 {
+/* Cards de previsão diária */
+.card-body p {
   font-size: 0.9rem;
 }
 
-iframe {
-  border-radius: 10px;
+/* Sidebar (base.html) */
+.bg-light {
+  background-color: #f0f2f5 !important;
+}
+
+.list-group-item {
+  border: none;
+  font-weight: 500;
+}
+
+.list-group-item:hover,
+.list-group-item:focus {
+  background-color: #e9ecef;
+  color: #0d6efd;
+}
+
+/* Imagens das notícias */
+.card-img-top {
+  height: 160px;
+  object-fit: cover;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+
+/* Título da seção */
+h2 {
+  font-size: 1.5rem;
+}
+
+/* Formulário de busca */
+input[type="text"]::placeholder {
+  color: #999;
+}
+
+/* Alertas */
+.alert-info {
+  background-color: #e9f4ff;
+  color: #31708f;
+  border: none;
 }
