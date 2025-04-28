@@ -1,55 +1,30 @@
-window.onload = () => {
-  const canvas = document.getElementById("graficoClima");
-  const previsao = window.dadosPrevisao || [];
+document.addEventListener('DOMContentLoaded', function() {
+  const ctx = document.getElementById('graficoClima').getContext('2d');
+  const horarios = window.dadosPrevisao.slice(0, 8).map(item => item.dt_txt.split(' ')[1].substring(0,5));
+  const temperaturas = window.dadosPrevisao.slice(0, 8).map(item => item.main.temp);
 
-  if (!canvas || !previsao.length) return;
-
-  const ctx = canvas.getContext("2d");
-
-  const horarios = previsao.map(item => item.dt_txt.split(" ")[1].slice(0, 5));
-  const temperaturas = previsao.map(item => item.main.temp);
-
-  const gradient = ctx.createLinearGradient(0, 0, 0, 400);
-  gradient.addColorStop(0, "#ff5722");
-  gradient.addColorStop(1, "#2196f3");
-
-  new Chart(ctx, {
-    type: "line",
+  window.graficoClima = new Chart(ctx, {
+    type: 'line',
     data: {
       labels: horarios,
       datasets: [{
-        label: "Temperatura (°C)",
+        label: 'Temp (°C)',
         data: temperaturas,
-        borderColor: "#ff5722",
-        backgroundColor: gradient,
+        backgroundColor: 'rgba(13, 110, 253, 0.2)',
+        borderColor: 'rgba(13, 110, 253, 1)',
+        borderWidth: 2,
         fill: true,
-        tension: 0.4,
-        pointRadius: 5,
-        pointHoverRadius: 6
+        tension: 0.4
       }]
     },
     options: {
       responsive: true,
-      animation: {
-        duration: 1000,
-        easing: "easeOutQuart"
-      },
-      plugins: {
-        legend: { labels: { font: { size: 14 } } },
-        tooltip: {
-          callbacks: {
-            label: context => `${context.parsed.y} °C`
-          }
-        }
-      },
+      maintainAspectRatio: false,
       scales: {
         y: {
-          title: { display: true, text: "Temperatura (°C)" }
-        },
-        x: {
-          title: { display: true, text: "Horário" }
+          beginAtZero: false
         }
       }
     }
   });
-};
+});

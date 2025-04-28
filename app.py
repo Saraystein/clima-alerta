@@ -1,21 +1,23 @@
 from flask import Flask, render_template, request, session
 import requests
 from collections import defaultdict
-from datetime import datetime
+from datetime import datetime, timedelta
 
 app = Flask(__name__)
-app.secret_key = "secreto"  # Necessário para usar session
+app.secret_key = "secreto"
 
-GNEWS_API_KEY = "64499b015d3300d46c192654f4bc9424"
+# APIs
+OPENWEATHER_API_KEY = "fb019c1d1d18980deecce5e1e860f545"
+NEWS_API_KEY = "5d392c40a9fb4e4f90404c42d613e30d"
 
 @app.route("/")
 def index():
     cidade = request.args.get("cidade", "São Paulo")
-    session["cidade_atual"] = cidade  # Salva a cidade pesquisada
+    session["cidade_atual"] = cidade
 
-    API_KEY = "fb019c1d1d18980deecce5e1e860f545"
-    url_clima = f"https://api.openweathermap.org/data/2.5/weather?q={cidade}&appid={API_KEY}&units=metric&lang=pt"
-    url_previsao = f"https://api.openweathermap.org/data/2.5/forecast?q={cidade}&appid={API_KEY}&units=metric&lang=pt"
+    # URLs da previsão do tempo
+    url_clima = f"https://api.openweathermap.org/data/2.5/weather?q={cidade}&appid={OPENWEATHER_API_KEY}&units=metric&lang=pt"
+    url_previsao = f"https://api.openweathermap.org/data/2.5/forecast?q={cidade}&appid={OPENWEATHER_API_KEY}&units=metric&lang=pt"
 
     resposta_clima = requests.get(url_clima).json()
     resposta_previsao = requests.get(url_previsao).json()
@@ -35,26 +37,41 @@ def index():
         "icone": resposta_clima["weather"][0]["icon"]
     }
 
+    # Organizar a previsão
     agrupado = defaultdict(list)
     for item in resposta_previsao["list"]:
         dia = item["dt_txt"].split()[0]
         agrupado[dia].append(item)
 
     previsao_por_dia = []
-    for dia, blocos in agrupado.items():
-        temperaturas = [b["main"]["temp"] for b in blocos]
-        icones = [b["weather"][0]["icon"] for b in blocos]
-        icone_mais_comum = max(set(icones), key=icones.count)
-        previsao_por_dia.append({
-            "dia": datetime.strptime(dia, "%Y-%m-%d").strftime("%d/%m"),
-            "temp_max": max(temperaturas),
-            "temp_min": min(temperaturas),
-            "icone": icone_mais_comum
-        })
+    hoje = datetime.now().date()
 
-    dados_previsao = resposta_previsao["list"][:8]
+    for i in range(5):  # hoje + 4 dias
+        dia_atual = hoje + timedelta(days=i)
+        dia_str = dia_atual.strftime("%Y-%m-%d")
 
-    return render_template("index.html", clima=clima, previsao=previsao_por_dia, dadosPrevisao=dados_previsao, erro=False)
+        blocos = agrupado.get(dia_str)
+        if blocos:
+            temperaturas = [b["main"]["temp"] for b in blocos]
+            icones = [b["weather"][0]["icon"] for b in blocos]
+            icone_mais_comum = max(set(icones), key=icones.count)
+
+            previsao_por_dia.append({
+                "dia": dia_atual.strftime("%d/%m"),
+                "temp_max": max(temperaturas),
+                "temp_min": min(temperaturas),
+                "icone": icone_mais_comum
+            })
+
+    dados_previsao = resposta_previsao["list"]
+
+    return render_template(
+        "index.html",
+        clima=clima,
+        previsao=previsao_por_dia,
+        dadosPrevisao=dados_previsao,
+        erro=False
+    )
 
 @app.route("/sobre")
 def sobre():
@@ -64,14 +81,14 @@ def sobre():
 def noticias():
     cidade = session.get("cidade_atual", "São Paulo")
     termo_busca = f"clima {cidade}"
-    
+
     url = "https://newsapi.org/v2/everything"
     params = {
         "q": termo_busca,
         "language": "pt",
-        "apiKey": "5d392c40a9fb4e4f90404c42d613e30d",
-        "pageSize": 10,  # Limitar para 10 notícias
-        "sortBy": "publishedAt"  # Ordenar pela mais recente
+        "apiKey": NEWS_API_KEY,
+        "pageSize": 10,
+        "sortBy": "publishedAt"
     }
 
     resposta = requests.get(url, params=params).json()

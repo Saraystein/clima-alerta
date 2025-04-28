@@ -21,35 +21,37 @@
     <div class="alert alert-danger">Cidade não encontrada. Tente novamente.</div>
   {% else %}
   <div class="row">
-    <!-- Clima atual -->
+    <!-- Clima atual (Card principal) -->
     <div class="col-md-4">
-      <div class="card shadow-sm p-3">
-        <h5 class="text-center fw-bold">
+      <div class="card shadow-sm p-3" id="card-principal">
+        <h5 class="text-center fw-bold" id="cidade-pais">
           {{ clima.cidade }}, {{ clima.pais }}
           <img src="https://flagcdn.com/24x18/{{ clima.pais|lower }}.png" alt="bandeira">
         </h5>
         <div class="text-center">
-          <img src="https://openweathermap.org/img/wn/{{ clima.icone }}@2x.png" width="60">
-          <h2 class="fw-bold">{{ clima.temp }}°C</h2>
-          <p>{{ clima.descricao }}</p>
+          <img id="icone-principal" src="https://openweathermap.org/img/wn/{{ clima.icone }}@2x.png" width="60">
+          <h2 class="fw-bold" id="temp-principal">{{ clima.temp }}°C</h2>
+          <p id="descricao-principal">{{ clima.descricao }}</p>
         </div>
         <ul class="list-unstyled">
-          <li>🌡️ Máx: {{ clima.max }}°C</li>
-          <li>❄️ Mín: {{ clima.min }}°C</li>
-          <li>💧 Umidade: {{ clima.umidade }}%</li>
-          <li>💨 Vento: {{ clima.vento|round(1) }} km/h</li>
+          <li>🌡️ Máx: <span id="temp-max">{{ clima.max }}</span>°C</li>
+          <li>❄️ Mín: <span id="temp-min">{{ clima.min }}</span>°C</li>
+          <li>💧 Umidade: <span id="umidade">{{ clima.umidade }}</span>%</li>
+          <li>💨 Vento: <span id="vento">{{ clima.vento|round(1) }}</span> km/h</li>
         </ul>
         <iframe src="https://www.google.com/maps?q={{ clima.cidade }}&output=embed"
                 width="100%" height="180" style="border:0; border-radius:10px;" allowfullscreen></iframe>
       </div>
     </div>
 
-    <!-- Previsão por dia + gráfico -->
+    <!-- Previsão + gráfico -->
     <div class="col-md-8">
       <!-- Cards de previsão diária -->
-      <div class="d-flex overflow-auto mb-3">
+      <div class="d-flex overflow-auto mb-3" id="esteira-cards">
         {% for dia in previsao %}
-        <div class="card text-center me-2 flex-shrink-0" style="min-width: 100px;">
+        <div class="card text-center me-2 flex-shrink-0 card-dia" 
+             style="min-width: 100px; cursor:pointer;"
+             data-dia="{{ dia.dia }}">
           <div class="card-body p-2">
             <h6 class="fw-bold">{{ dia.dia }}</h6>
             <img src="https://openweathermap.org/img/wn/{{ dia.icone }}@2x.png" width="40">
@@ -61,11 +63,11 @@
 
       <!-- Gráfico -->
       <div class="card p-3 shadow-sm">
-        <h5 class="text-center mb-3">🌡️ Gráfico de Temperatura (°C)</h5>
-        <canvas id="graficoClima" height="200"></canvas>
-      </div>
-    </div>
+  <h5 class="text-center mb-3">🌡️ Gráfico de Temperatura (°C)</h5>
+  <div id="containerGrafico" style="position: relative; height: 300px;">
+    <canvas id="graficoClima"></canvas>
   </div>
+</div>   
   {% endif %}
 </div>
 
@@ -75,4 +77,5 @@
   window.dadosPrevisao = {{ dadosPrevisao | default([]) | tojson }};
 </script>
 <script src="{{ url_for('static', filename='js/grafico.js') }}"></script>
+<script src="{{ url_for('static', filename='js/previsao.js') }}"></script>
 {% endblock %}
