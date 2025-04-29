@@ -65,3 +65,29 @@ input[type="text"]::placeholder {
   color: #31708f;
   border: none;
 }
+
+#autocomplete-list {
+  z-index: 1000;
+}
+
+.autocomplete-suggestions {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  z-index: 9999;
+  width: 100%;
+  max-height: 250px;
+  overflow-y: auto;
+}
+.autocomplete-suggestion {
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+.autocomplete-suggestion:hover {
+  background-color: #f1f1f1;
+}

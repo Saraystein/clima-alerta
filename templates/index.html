@@ -3,11 +3,22 @@
 
 {% block content %}
 <div class="container-fluid">
-  <!-- Campo de busca -->
-  <form method="get" action="/">
+  <!-- Campo de busca com autocomplete -->
+  <form method="get" action="/" style="position: relative; z-index: 1000;">
     <div class="row mb-3">
-      <div class="col">
-        <input name="cidade" type="text" class="form-control" placeholder="Buscar cidade" autocomplete="off" />
+      <div class="col position-relative">
+        <input id="input-cidade" name="cidade" type="text" class="form-control" placeholder="Buscar cidade" autocomplete="off" />
+        <div id="sugestoes" style="
+          position: absolute;
+          top: 100%;
+          left: 0;
+          right: 0;
+          background: white;
+          border: 1px solid #ccc;
+          z-index: 1001;
+          display: none;
+          box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        "></div>
       </div>
       <div class="col-auto">
         <button class="btn btn-outline-secondary">
@@ -21,7 +32,7 @@
     <div class="alert alert-danger">Cidade não encontrada. Tente novamente.</div>
   {% else %}
   <div class="row">
-    <!-- Clima atual (Card principal) -->
+    <!-- Card principal -->
     <div class="col-md-4">
       <div class="card shadow-sm p-3" id="card-principal">
         <h5 class="text-center fw-bold" id="cidade-pais">
@@ -46,10 +57,10 @@
 
     <!-- Previsão + gráfico -->
     <div class="col-md-8">
-      <!-- Cards de previsão diária -->
+      <!-- Cards de previsão -->
       <div class="d-flex overflow-auto mb-3" id="esteira-cards">
         {% for dia in previsao %}
-        <div class="card text-center me-2 flex-shrink-0 card-dia" 
+        <div class="card text-center me-2 flex-shrink-0 card-dia"
              style="min-width: 100px; cursor:pointer;"
              data-dia="{{ dia.dia }}">
           <div class="card-body p-2">
@@ -62,12 +73,14 @@
       </div>
 
       <!-- Gráfico -->
-      <div class="card p-3 shadow-sm">
-  <h5 class="text-center mb-3">🌡️ Gráfico de Temperatura (°C)</h5>
-  <div id="containerGrafico" style="position: relative; height: 300px;">
-    <canvas id="graficoClima"></canvas>
+      <div class="card p-3 shadow-sm" style="height: 300px;">
+        <h5 class="text-center mb-3">🌡️ Gráfico de Temperatura (°C)</h5>
+        <div id="containerGrafico" style="position: relative; height: 200px;">
+          <canvas id="graficoClima"></canvas>
+        </div>
+      </div>
+    </div>
   </div>
-</div>   
   {% endif %}
 </div>
 
@@ -78,4 +91,5 @@
 </script>
 <script src="{{ url_for('static', filename='js/grafico.js') }}"></script>
 <script src="{{ url_for('static', filename='js/previsao.js') }}"></script>
+<script src="{{ url_for('static', filename='js/autocomplete.js') }}"></script>
 {% endblock %}
