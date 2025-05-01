@@ -3,22 +3,11 @@
 
 {% block content %}
 <div class="container-fluid">
-  <!-- Campo de busca com autocomplete -->
-  <form method="get" action="/" style="position: relative; z-index: 1000;">
+  <!-- Campo de busca -->
+  <form method="get" action="/">
     <div class="row mb-3">
-      <div class="col position-relative">
-        <input id="input-cidade" name="cidade" type="text" class="form-control" placeholder="Buscar cidade" autocomplete="off" />
-        <div id="sugestoes" style="
-          position: absolute;
-          top: 100%;
-          left: 0;
-          right: 0;
-          background: white;
-          border: 1px solid #ccc;
-          z-index: 1001;
-          display: none;
-          box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        "></div>
+      <div class="col">
+        <input name="cidade" type="text" class="form-control" placeholder="Buscar cidade" autocomplete="off" />
       </div>
       <div class="col-auto">
         <button class="btn btn-outline-secondary">
@@ -32,7 +21,7 @@
     <div class="alert alert-danger">Cidade não encontrada. Tente novamente.</div>
   {% else %}
   <div class="row">
-    <!-- Card principal -->
+    <!-- Clima atual -->
     <div class="col-md-4">
       <div class="card shadow-sm p-3" id="card-principal">
         <h5 class="text-center fw-bold" id="cidade-pais">
@@ -57,7 +46,7 @@
 
     <!-- Previsão + gráfico -->
     <div class="col-md-8">
-      <!-- Cards de previsão -->
+      <!-- Cards de previsão diária -->
       <div class="d-flex overflow-auto mb-3" id="esteira-cards">
         {% for dia in previsao %}
         <div class="card text-center me-2 flex-shrink-0 card-dia"
@@ -91,5 +80,4 @@
 </script>
 <script src="{{ url_for('static', filename='js/grafico.js') }}"></script>
 <script src="{{ url_for('static', filename='js/previsao.js') }}"></script>
-<script src="{{ url_for('static', filename='js/autocomplete.js') }}"></script>
 {% endblock %}

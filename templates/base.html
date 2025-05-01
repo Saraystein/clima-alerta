@@ -13,7 +13,7 @@
 
 <body>
   <div class="d-flex">
-    <!-- Sidebar fixa -->
+    <!-- Sidebar -->
     <div class="bg-light border-end vh-100 p-3" style="width: 220px;">
       <h4 class="fw-bold mb-4 text-center">🌎 Conexão</h4>
       <div class="list-group list-group-flush">
@@ -26,13 +26,16 @@
         <a href="{{ url_for('noticias') }}" class="list-group-item list-group-item-action">
           <i class="fas fa-newspaper"></i> Notícias
         </a>
+        <a href="{{ url_for('alerta') }}" class="list-group-item list-group-item-action">
+          <i class="fas fa-bell"></i> Alertas
+        </a>
       </div>
     </div>
 
-    <!-- Conteúdo -->
-    <div class="flex-grow-1 p-4">
+    <!-- Main content -->
+    <main class="flex-grow-1 p-4">
       {% block content %}{% endblock %}
-    </div>
+    </main>
   </div>
 
   <!-- Scripts Bootstrap -->
