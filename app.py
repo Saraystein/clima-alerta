@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, make_response
 import requests
 import json
 import os
@@ -9,8 +9,9 @@ from datetime import datetime
 import threading
 import time
 
-
 app = Flask(__name__)
+
+# ================== Função: Buscar Clima ==================
 
 def buscar_clima(cidade):
     api_key = "fb019c1d1d18980deecce5e1e860f545"
@@ -49,28 +50,76 @@ def buscar_clima(cidade):
                 "icone": item["weather"][0]["icon"],
                 "temp_min": item["main"]["temp_min"],
                 "temp_max": item["main"]["temp_max"]
-        })
+            })
+
     return clima, previsao_resumida, dados_previsao
+
+# ================== Função: Buscar Notícias ==================
+
+def buscar_noticias(cidade):
+    chave = "5d392c40a9fb4e4f90404c42d613e30d"
+    url = "https://newsapi.org/v2/everything"
+
+    termos = f"{cidade} clima OR enchente OR seca OR meio ambiente OR poluição"
+    params = {
+        "q": termos,
+        "language": "pt",
+        "sortBy": "publishedAt",
+        "pageSize": 10,
+        "apiKey": chave
+    }
+
+    resposta = requests.get(url, params=params).json()
+    return resposta.get("articles", [])
+
+# ================== Rotas ==================
 
 @app.route("/")
 def index():
     cidade = request.args.get("cidade", "São Paulo")
     clima, previsao, dados_previsao = buscar_clima(cidade)
+
     if not clima:
         return render_template("index.html", erro=True)
-    return render_template("index.html", clima=clima, previsao=previsao, dadosPrevisao=dados_previsao)
+
+    resposta = make_response(render_template("index.html", clima=clima, previsao=previsao, dadosPrevisao=dados_previsao))
+    resposta.set_cookie("ultima_cidade", cidade)
+    return resposta
+
+@app.route("/noticias")
+def noticias():
+    cidade = request.args.get("cidade") or request.cookies.get("ultima_cidade") or "Brasil"
+
+    termo_busca = f"clima OR meio ambiente OR poluição OR chuva {cidade}"
+    chave = "5d392c40a9fb4e4f90404c42d613e30d"
+    url = "https://newsapi.org/v2/everything"
+
+    params = {
+        "q": termo_busca,
+        "language": "pt",
+        "sortBy": "publishedAt",
+        "apiKey": chave,
+        "pageSize": 10
+    }
+
+    resp = requests.get(url, params=params).json()
+    artigos = resp.get("articles", [])
+
+    response = render_template("noticias.html", cidade=cidade, artigos=artigos)
+    resp_obj = app.make_response(response)
+    resp_obj.set_cookie("ultima_cidade", cidade)
+
+    return resp_obj
 
 @app.route("/sobre")
 def sobre():
     return render_template("sobre.html")
 
-@app.route("/noticias")
-def noticias():
-    return render_template("noticias.html")
-
 @app.route("/alerta")
 def alerta():
     return render_template("alerta.html")
+
+# ================== Run ==================
 
 if __name__ == "__main__":
     app.run(debug=True)
