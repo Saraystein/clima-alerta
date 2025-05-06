@@ -1,0 +1,3 @@
+Gustavo,gustavosaray2@gmail.com,tokyo
+Robson,juliosgrizrock@gmail.com,Manaus
+Teste,gustavosaray3@gmail.com,tokyo

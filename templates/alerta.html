@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Cadastro de Alerta{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+  <h2 class="mb-3">Receber Alertas Climáticos</h2>
+  <form method="POST" action="/alerta">
+    <div class="mb-3">
+      <label for="nome" class="form-label">Nome</label>
+      <input type="text" class="form-control" id="nome" name="nome" required>
+    </div>
+    <div class="mb-3">
+      <label for="email" class="form-label">E-mail</label>
+      <input type="email" class="form-control" id="email" name="email" required>
+    </div>
+    <div class="mb-3">
+      <label for="cidade" class="form-label">Cidade</label>
+      <input type="text" class="form-control" id="cidade" name="cidade" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Confirmar Cadastro</button>
+  </form>
+</div>
+{% endblock %}

@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}Cadastro Confirmado{% endblock %}
+
+{% block content %}
+<div class="container mt-5 text-center">
+  <h2 class="text-success mb-4">✅ Cadastro realizado com sucesso!</h2>
+  <p>Você receberá alertas climáticos para <strong>{{ cidade }}</strong> no e-mail <strong>{{ email }}</strong>.</p>
+  <a href="/" class="btn btn-outline-primary mt-3">Voltar para a página inicial</a>
+</div>
+{% endblock %}

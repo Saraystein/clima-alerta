@@ -115,9 +115,43 @@ def noticias():
 def sobre():
     return render_template("sobre.html")
 
-@app.route("/alerta")
+@app.route("/alerta", methods=["GET", "POST"])
 def alerta():
+    if request.method == "POST":
+        nome = request.form.get("nome")
+        email = request.form.get("email")
+        cidade = request.form.get("cidade")
+
+        # Aqui os dados podem ser salvos em um arquivo ou banco
+        with open("usuarios_alerta.txt", "a", encoding="utf-8") as f:
+            f.write(f"{nome},{email},{cidade}\n")
+
+        # Envia o e-mail de confirmação
+        enviar_email_confirmacao(nome, email, cidade)
+
+        return render_template("confirmacao.html", nome=nome, cidade=cidade)
     return render_template("alerta.html")
+
+def enviar_email_confirmacao(nome, email, cidade):
+    remetente = "climaticaconexao@gmail.com"        # <-- altere para seu e-mail real
+    senha = "tcaz xuvo fywm jfnc"                       # <-- use app password se for Gmail
+    destinatario = email
+
+    msg = MIMEMultipart()
+    msg["From"] = remetente
+    msg["To"] = destinatario
+    msg["Subject"] = "Confirmação de Alerta Climático"
+
+    corpo = f"Olá, {nome}!\n\nVocê se cadastrou para receber alertas do clima em {cidade}."
+    msg.attach(MIMEText(corpo, "plain"))
+
+    try:
+        with smtplib.SMTP_SSL("smtp.gmail.com", 465) as servidor:
+            servidor.login(remetente, senha)
+            servidor.send_message(msg)
+        print("E-mail enviado com sucesso!")
+    except Exception as e:
+        print(f"Erro ao enviar e-mail: {e}")
 
 # ================== Run ==================
 
