@@ -1,2 +1,5 @@
-flask
+Flask
+gunicorn
 chart.js
+schedule
+python-dotenv
