@@ -156,4 +156,5 @@ def enviar_email_confirmacao(nome, email, cidade):
 # ================== Run ==================
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    port = int(os.environ.get("PORT", 5000))  # Railway define essa variável
+    app.run(debug=True, host="0.0.0.0", port=port)
