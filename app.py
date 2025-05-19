@@ -122,19 +122,19 @@ def alerta():
         email = request.form.get("email")
         cidade = request.form.get("cidade")
 
-        # Aqui os dados podem ser salvos em um arquivo ou banco
+      
         with open("usuarios_alerta.txt", "a", encoding="utf-8") as f:
             f.write(f"{nome},{email},{cidade}\n")
 
-        # Envia o e-mail de confirmação
+        
         enviar_email_confirmacao(nome, email, cidade)
 
         return render_template("confirmacao.html", nome=nome, cidade=cidade)
     return render_template("alerta.html")
 
 def enviar_email_confirmacao(nome, email, cidade):
-    remetente = "climaticaconexao@gmail.com"        # <-- altere para seu e-mail real
-    senha = "tcaz xuvo fywm jfnc"                       # <-- use app password se for Gmail
+    remetente = "climaticaconexao@gmail.com"
+    senha = "tcaz xuvo fywm jfnc"
     destinatario = email
 
     msg = MIMEMultipart()
@@ -153,8 +153,6 @@ def enviar_email_confirmacao(nome, email, cidade):
     except Exception as e:
         print(f"Erro ao enviar e-mail: {e}")
 
-# ================== Run ==================
-
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 5000))  # Railway define essa variável
+    port = int(os.environ.get("PORT", 5000)) 
     app.run(debug=True, host="0.0.0.0", port=port)
