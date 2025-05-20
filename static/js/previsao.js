@@ -1,15 +1,26 @@
 document.addEventListener('DOMContentLoaded', function () {
   const cardsDia = document.querySelectorAll('.card-dia');
   const dados = window.dadosPrevisao;
+  const hojeStr = new Date().toISOString().split("T")[0];
+
+  // Exibir "Hoje" visualmente no card correto
+  cardsDia.forEach(card => {
+    const dia = card.getAttribute('data-dia');
+    if (dia === hojeStr) {
+      const label = card.querySelector('h6');
+      if (label) label.textContent = "Hoje";
+    }
+  });
+
+  // Cria o gráfico com labels fixos
+  inicializarGraficoPadrao();
 
   cardsDia.forEach(card => {
     card.addEventListener('click', function () {
-      const diaClicado = this.getAttribute('data-dia'); // dd/mm
-      const [dia, mes] = diaClicado.split('/');
-      const dataAlvo = `2025-${mes}-${dia.padStart(2, '0')}`;
+      const diaClicado = this.getAttribute('data-dia'); // formato YYYY-MM-DD
 
       const diaSelecionado = dados.filter(item =>
-        item.dt_txt.startsWith(dataAlvo)
+        item.dt_txt && item.dt_txt.startsWith(diaClicado)
       );
 
       if (diaSelecionado.length > 0) {
@@ -26,32 +37,31 @@ document.addEventListener('DOMContentLoaded', function () {
         const umidade = diaSelecionado.reduce((acc, item) => acc + item.main.humidity, 0) / diaSelecionado.length;
         const vento = diaSelecionado.reduce((acc, item) => acc + item.wind.speed, 0) / diaSelecionado.length * 3.6;
 
-        document.getElementById('temp-max').innerText = tempMax.toFixed(1);
-        document.getElementById('temp-min').innerText = tempMin.toFixed(1);
-        document.getElementById('umidade').innerText = umidade.toFixed(0);
-        document.getElementById('vento').innerText = vento.toFixed(1);
+        document.getElementById('temp-max').innerText = tempMax.toFixed(1) + '°C';
+        document.getElementById('temp-min').innerText = tempMin.toFixed(1) + '°C';
+        document.getElementById('umidade').innerText = umidade.toFixed(0) + '%';
+        document.getElementById('vento').innerText = vento.toFixed(1) + ' km/h';
 
-        atualizarGraficoNovo(diaSelecionado);
+        atualizarGraficoComPadrao(diaSelecionado);
       }
     });
   });
 });
 
-function atualizarGraficoNovo(dadosDia) {
-  const container = document.getElementById('containerGrafico');
-  container.innerHTML = '<canvas id="graficoClima"></canvas>';
+// Define os horários fixos do gráfico
+const horariosPadrao = ["00:00", "03:00", "06:00", "09:00", "12:00", "15:00", "18:00", "21:00"];
 
+function inicializarGraficoPadrao() {
   const ctx = document.getElementById('graficoClima').getContext('2d');
-  const horarios = dadosDia.map(item => item.dt_txt.split(' ')[1].substring(0, 5));
-  const temperaturas = dadosDia.map(item => item.main.temp);
+  const temperaturasVazias = Array(horariosPadrao.length).fill(null);
 
-  new Chart(ctx, {
+  window.graficoClima = new Chart(ctx, {
     type: 'line',
     data: {
-      labels: horarios,
+      labels: horariosPadrao,
       datasets: [{
         label: 'Temp (°C)',
-        data: temperaturas,
+        data: temperaturasVazias,
         backgroundColor: 'rgba(13, 110, 253, 0.2)',
         borderColor: 'rgba(13, 110, 253, 1)',
         borderWidth: 2,
@@ -69,4 +79,18 @@ function atualizarGraficoNovo(dadosDia) {
       }
     }
   });
+}
+
+function atualizarGraficoComPadrao(dadosDia) {
+  const tempPorHorario = {};
+
+  dadosDia.forEach(item => {
+    const hora = item.dt_txt.split(' ')[1].substring(0, 5);
+    tempPorHorario[hora] = item.main.temp;
+  });
+
+  const novaTemperatura = horariosPadrao.map(hora => tempPorHorario[hora] ?? null);
+
+  window.graficoClima.data.datasets[0].data = novaTemperatura;
+  window.graficoClima.update();
 }

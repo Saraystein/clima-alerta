@@ -5,24 +5,24 @@
 <div class="container-fluid">
   <!-- Campo de busca -->
   <form method="get" action="/" class="search-bar mb-4">
-  <input 
-    name="cidade" 
-    type="text" 
-    class="search-input" 
-    placeholder="Buscar cidade" 
-    autocomplete="off" />
-  <button class="search-icon-button" type="submit">
-    <i class="fas fa-search"></i>
-  </button>
-</form>
-  
+    <input 
+      name="cidade" 
+      type="text" 
+      class="search-input" 
+      placeholder="Buscar cidade" 
+      autocomplete="off" />
+    <button class="search-icon-button" type="submit">
+      <i class="fas fa-search"></i>
+    </button>
+  </form>
+
   {% if erro %}
     <div class="alert alert-danger">Cidade não encontrada. Tente novamente.</div>
   {% else %}
     <div class="row">
       <!-- Clima atual -->
       <div class="col-md-4 mb-4">
-        <div class="card shadow-sm p-3" id="card-principal" style="background-color: #ffffff; border-radius: var(--card-radius);">
+        <div class="card shadow-sm p-3" id="card-principal" style="background-color: #fafafa; border-radius: var(--card-radius);">
           <h5 class="text-center fw-bold" id="cidade-pais" style="color: var(--color-primary);">
             {{ clima.cidade }}, {{ clima.pais }}
             <img src="https://flagcdn.com/24x18/{{ clima.pais|lower }}.png" alt="bandeira">
@@ -32,8 +32,7 @@
             <h2 class="fw-bold" id="temp-principal" style="color: var(--color-tertiary);">{{ clima.temp }}°C</h2>
             <p id="descricao-principal" style="color: var(--color-quaternary);">{{ clima.descricao }}</p>
           </div>
-          
-          <!-- Informações organizadas em duas linhas -->
+
           <div class="row text-center mt-3">
             <div class="col-6">
               <small style="color: var(--color-primary);">🌡️ Máx</small><br>
@@ -54,31 +53,19 @@
               <span id="vento" class="fw-bold" style="color: var(--color-tertiary);">{{ clima.vento|round(1) }} km/h</span>
             </div>
           </div>
-          
+
           <iframe src="https://www.google.com/maps?q={{ clima.cidade }}&output=embed"
                   width="100%" height="180" style="border:0; border-radius: var(--card-radius);" allowfullscreen></iframe>
-          
-          <!-- Botão de Compartilhar Clima -->
+
           <div class="text-center mt-3">
             <button id="btn-compartilhar" class="btn btn-outline-secondary">Compartilhar Clima</button>
           </div>
         </div>
       </div>
-      
+
       <!-- Previsão + Gráfico -->
       <div class="col-md-8">
-        <!-- Cards de previsão diária -->
         <div class="d-flex overflow-auto mb-3" id="esteira-cards">
-          <!-- Card de previsão do dia atual -->
-          <div class="card text-center me-2 flex-shrink-0 card-dia" 
-               style="min-width: 100px; cursor:pointer; background-color: #ffffff; border-radius: var(--card-radius);"
-               data-dia="Hoje">
-            <div class="card-body p-2">
-              <h6 class="fw-bold" style="color: var(--color-primary);">Hoje</h6>
-              <img src="https://openweathermap.org/img/wn/{{ clima.icone }}@2x.png" width="40">
-              <p class="mb-0" style="color: var(--color-tertiary);">{{ clima.temp }}°</p>
-            </div>
-          </div>
           {% for dia in previsao %}
             <div class="card text-center me-2 flex-shrink-0 card-dia" 
                  style="min-width: 100px; cursor:pointer; background-color: #ffffff; border-radius: var(--card-radius);"
@@ -91,8 +78,7 @@
             </div>
           {% endfor %}
         </div>
-        
-        <!-- Gráfico -->
+
         <div class="card p-3 shadow-sm" style="height: 300px; background-color: #ffffff; border-radius: var(--card-radius);">
           <h5 class="text-center mb-3" style="color: var(--color-primary);">🌡️ Gráfico de Temperatura (°C)</h5>
           <div id="containerGrafico" style="position: relative; height: 200px;">
@@ -109,98 +95,34 @@
 <script>
   window.dadosPrevisao = {{ dadosPrevisao | default([]) | tojson }};
 </script>
-<script src="{{ url_for('static', filename='js/grafico.js') }}"></script>
 <script src="{{ url_for('static', filename='js/previsao.js') }}"></script>
 
-<!-- Script para atualizar a card principal ao clicar num card de previsão com animação e compartilhar -->
+<!-- 🔗 Botão de Compartilhar -->
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-  const forecastCards = document.querySelectorAll('.card-dia');
-  
-  forecastCards.forEach(function(card) {
-    card.addEventListener('click', function() {
-      const diaSelecionado = card.getAttribute('data-dia');
-      
-      if (diaSelecionado === "Hoje") {
-        // Atualiza a card principal com os dados atuais (do objeto clima)
-        // Elementos a atualizar com animação (fade-out e fade-in)
-        const elements = [
-          document.getElementById('icone-principal'),
-          document.getElementById('temp-principal'),
-          document.getElementById('descricao-principal'),
-          document.getElementById('temp-max'),
-          document.getElementById('temp-min'),
-          document.getElementById('umidade'),
-          document.getElementById('vento')
-        ];
-        
-        elements.forEach(el => el.style.opacity = 0);
-        
-        setTimeout(function() {
-          document.getElementById('icone-principal').src = `https://openweathermap.org/img/wn/{{ clima.icone }}@2x.png`;
-          document.getElementById('temp-principal').innerText = `{{ clima.temp }}°C`;
-          document.getElementById('descricao-principal').innerText = `{{ clima.descricao }}`;
-          document.getElementById('temp-max').innerText = `{{ clima.max }}°C`;
-          document.getElementById('temp-min').innerText = `{{ clima.min }}°C`;
-          document.getElementById('umidade').innerText = `{{ clima.umidade }}%`;
-          document.getElementById('vento').innerText = `{{ clima.vento|round(1) }} km/h`;
-          
-          elements.forEach(el => el.style.opacity = 1);
-        }, 300);
-      } else {
-        // Busca o objeto de previsão correspondente no array window.dadosPrevisao
-        const forecast = window.dadosPrevisao.find(item => item.dia === diaSelecionado);
-        if (forecast) {
-          const elements = [
-            document.getElementById('icone-principal'),
-            document.getElementById('temp-principal'),
-            document.getElementById('descricao-principal'),
-            document.getElementById('temp-max'),
-            document.getElementById('temp-min'),
-            document.getElementById('umidade'),
-            document.getElementById('vento')
-          ];
-          
-          elements.forEach(el => el.style.opacity = 0);
-          
-          setTimeout(function() {
-            document.getElementById('icone-principal').src = `https://openweathermap.org/img/wn/${forecast.icone}@2x.png`;
-            document.getElementById('temp-principal').innerText = `${forecast.temp_max}°C`;
-            document.getElementById('descricao-principal').innerText = forecast.descricao || `Previsão para ${forecast.dia}`;
-            document.getElementById('temp-max').innerText = `${forecast.temp_max}°C`;
-            document.getElementById('temp-min').innerText = `${forecast.temp_min}°C`;
-            document.getElementById('umidade').innerText = `${forecast.umidade}%`;
-            document.getElementById('vento').innerText = `${forecast.vento} km/h`;
-            
-            elements.forEach(el => el.style.opacity = 1);
-          }, 300);
-        }
-      }
-    });
-  });
-  
-  // Botão de Compartilhar Clima
+document.addEventListener('DOMContentLoaded', function () {
   const btnCompartilhar = document.getElementById('btn-compartilhar');
-  btnCompartilhar.addEventListener('click', function() {
-    const cidade = document.getElementById('cidade-pais').innerText;
-    const temp = document.getElementById('temp-principal').innerText;
-    const descricao = document.getElementById('descricao-principal').innerText;
-    const shareText = `O clima em ${cidade} é de ${temp}. ${descricao}`;
-    
+  if (!btnCompartilhar) return;
+
+  btnCompartilhar.addEventListener('click', function () {
+    const cidade = document.getElementById('cidade-pais')?.innerText || 'Cidade';
+    const temp = document.getElementById('temp-principal')?.innerText || '';
+    const descricao = document.getElementById('descricao-principal')?.innerText || '';
+    const texto = `🌤️ O clima em ${cidade} é de ${temp}. ${descricao}`;
+
     if (navigator.share) {
       navigator.share({
         title: 'Clima Atual',
-        text: shareText,
+        text: texto,
         url: window.location.href
-      }).catch(err => console.error(err));
-    } else if(navigator.clipboard) {
-      navigator.clipboard.writeText(shareText).then(() => {
-        alert('Texto do clima copiado para a área de transferência!');
-      }, (err) => {
-        alert('Não foi possível copiar o texto.');
+      }).catch(err => console.log("Compartilhamento cancelado:", err));
+    } else if (navigator.clipboard) {
+      navigator.clipboard.writeText(texto).then(() => {
+        alert('📋 Clima copiado para a área de transferência!');
+      }, () => {
+        alert('❌ Não foi possível copiar o texto.');
       });
     } else {
-      alert(shareText);
+      prompt("Copie manualmente o clima:", texto);
     }
   });
 });

@@ -6,26 +6,26 @@ import os
 from datetime import datetime
 import threading
 
-# Carrega as variáveis do arquivo .env
+# Carrega variáveis do .env
 load_dotenv()
 
 app = Flask(__name__)
 
-# Configuração do Flask-Mail para utilizar o SMTP do Gmail
+# Configurações de e-mail
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 465
 app.config['MAIL_USE_SSL'] = True
-app.config['MAIL_USERNAME'] = os.getenv("MAIL_USERNAME")         # seu email: ex. seuemail@gmail.com
-app.config['MAIL_PASSWORD'] = os.getenv("MAIL_PASSWORD")         # senha do app ou a senha configurada
-app.config['MAIL_DEFAULT_SENDER'] = os.getenv("MAIL_USERNAME")   # padrão de remetente
+app.config['MAIL_USERNAME'] = os.getenv("MAIL_USERNAME")
+app.config['MAIL_PASSWORD'] = os.getenv("MAIL_PASSWORD")
+app.config['MAIL_DEFAULT_SENDER'] = os.getenv("MAIL_USERNAME")
 
 mail = Mail(app)
 
-# ================== Função: Obter Cidade ==================
-def obter_cidade():
-    return request.args.get("cidade") or request.cookies.get("ultima_cidade") or "Brasil"
+# Funções
 
-# ================== Função: Buscar Clima ==================
+def obter_cidade():
+    return request.args.get("cidade") or request.cookies.get("ultima_cidade") or "São Paulo"
+
 def buscar_clima(cidade):
     try:
         api_key = os.getenv("OPENWEATHER_API_KEY")
@@ -55,17 +55,16 @@ def buscar_clima(cidade):
             "vento": resp_clima["wind"]["speed"]
         }
 
-        dados_previsao = resp_previsao["list"]
+        dados_previsao = resp_previsao["list"]  # lista completa para gráfico e previsão.js
         previsao_resumida = []
         dias_vistos = set()
 
         for item in dados_previsao:
-            dia_iso = item["dt_txt"].split(" ")[0]
+            dia_iso = item["dt_txt"].split(" ")[0]  # YYYY-MM-DD
             if dia_iso not in dias_vistos:
                 dias_vistos.add(dia_iso)
-                dia_formatado = datetime.strptime(dia_iso, "%Y-%m-%d").strftime("%d/%m")
                 previsao_resumida.append({
-                    "dia": dia_formatado,
+                    "dia": dia_iso,
                     "icone": item["weather"][0]["icon"],
                     "temp_min": item["main"]["temp_min"],
                     "temp_max": item["main"]["temp_max"]
@@ -77,7 +76,6 @@ def buscar_clima(cidade):
         print(f"Erro ao buscar clima: {e}")
         return None, None, None
 
-# ================== Função: Buscar Notícias ==================
 def buscar_noticias(cidade):
     try:
         news_key = os.getenv("NEWSAPI_KEY")
@@ -97,7 +95,6 @@ def buscar_noticias(cidade):
         print(f"Erro ao buscar notícias: {e}")
         return []
 
-# ================== Função: Envio Assíncrono de E-mails ==================
 def send_async_email(app, msg):
     with app.app_context():
         try:
@@ -110,17 +107,24 @@ def enviar_email_confirmacao(nome, email, cidade):
     assunto = "Confirmação de Alerta Climático"
     corpo = f"Olá, {nome}!\n\nVocê se cadastrou para receber alertas do clima em {cidade}."
     msg = Message(subject=assunto, recipients=[email], body=corpo)
-    # Dispara o envio do e-mail em uma thread separada para não bloquear a resposta
     threading.Thread(target=send_async_email, args=(app, msg), daemon=True).start()
 
-# ================== Rotas ==================
+# Rotas
+
 @app.route("/")
 def index():
-    cidade = request.args.get("cidade") or "São Paulo"
+    cidade = obter_cidade()
     clima, previsao, dados_previsao = buscar_clima(cidade)
+
     if not clima:
         return render_template("index.html", erro=True)
-    resposta = make_response(render_template("index.html", clima=clima, previsao=previsao, dadosPrevisao=dados_previsao))
+
+    resposta = make_response(render_template(
+        "index.html",
+        clima=clima,
+        previsao=previsao,
+        dadosPrevisao=dados_previsao
+    ))
     resposta.set_cookie("ultima_cidade", cidade)
     return resposta
 
@@ -143,15 +147,15 @@ def alerta():
         email = request.form.get("email")
         cidade = request.form.get("cidade")
 
-        # Armazena os dados do usuário em um arquivo para alertas
         with open("usuarios_alerta.txt", "a", encoding="utf-8") as f:
             f.write(f"{nome},{email},{cidade}\n")
 
-        # Envia o e-mail de confirmação de forma assíncrona
         enviar_email_confirmacao(nome, email, cidade)
         return render_template("confirmacao.html", nome=nome, cidade=cidade)
+
     return render_template("alerta.html")
 
+# Inicialização
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
     app.run(debug=True, host="0.0.0.0", port=port)
