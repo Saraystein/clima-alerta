@@ -1,5 +1,4 @@
-Flask
-requests
-gunicorn
-schedule
-python-dotenv
+Flask==2.3.2
+Flask-Mail==0.9.1
+requests==2.31.0
+python-dotenv==1.0.0
