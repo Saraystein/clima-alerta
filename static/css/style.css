@@ -1,93 +1,141 @@
-body {
-  background-color: #f8f9fa;
-  font-family: 'Segoe UI', sans-serif;
+/* Variáveis Globais */
+:root {
+  --color-primary: #151B26;      /* Texto e destaques */
+  --color-secondary: #384759;    /* Sidebar, navbar, fundos escuros */
+  --color-tertiary: #6D8BA6;       /* Botões, interações */
+  --color-quaternary: #9CC1D9;     /* Efeitos de hover e links */
+  --color-bg: #D5E7F2;           /* Fundo principal */
+  --card-radius: 10px;
+  --transition-speed: 0.3s;
+  --font-family-base: 'Roboto', sans-serif;
 }
 
-/* Botão hover */
-.btn-outline-secondary:hover {
-  background-color: #0d6efd;
-  color: #fff;
+/* Estilos Globais */
+body, html {
+  height: 100%;
+  margin: 0;
+  font-family: var(--font-family-base);
+  background-color: var(--color-bg);
+  color: var(--color-primary);
 }
 
-/* Card clima + gráfico */
-.card {
-  border: none;
-  border-radius: 10px;
-  transition: box-shadow 0.3s ease;
-}
-
-.card:hover {
-  box-shadow: 0 0 12px rgba(0, 0, 0, 0.1);
-}
-
-/* Cards de previsão diária */
-.card-body p {
-  font-size: 0.9rem;
-}
-
-/* Sidebar (base.html) */
-.bg-light {
-  background-color: #f0f2f5 !important;
-}
-
-.list-group-item {
-  border: none;
-  font-weight: 500;
-}
-
-.list-group-item:hover,
-.list-group-item:focus {
-  background-color: #e9ecef;
-  color: #0d6efd;
-}
-
-/* Imagens das notícias */
-.card-img-top {
-  height: 160px;
-  object-fit: cover;
-  border-top-left-radius: 10px;
-  border-top-right-radius: 10px;
-}
-
-/* Título da seção */
-h2 {
-  font-size: 1.5rem;
-}
-
-/* Formulário de busca */
-input[type="text"]::placeholder {
-  color: #999;
-}
-
-/* Alertas */
-.alert-info {
-  background-color: #e9f4ff;
-  color: #31708f;
-  border: none;
-}
-
-#autocomplete-list {
-  z-index: 1000;
-}
-
-.autocomplete-suggestions {
-  position: absolute;
-  top: 100%;
+/* Sidebar para desktops */
+#sidebar {
+  height: 100vh;
+  width: 250px;
+  position: fixed;
+  top: 0;
   left: 0;
-  right: 0;
-  background: rgba(255, 255, 255, 0.95);
-  border: 1px solid #ced4da;
-  border-radius: 4px;
-  z-index: 9999;
-  width: 100%;
-  max-height: 250px;
-  overflow-y: auto;
-}
-.autocomplete-suggestion {
-  padding: 8px 12px;
-  cursor: pointer;
+  background-color: var(--color-secondary);
+  padding-top: 20px;
+  transition: all var(--transition-speed);
 }
 
-.autocomplete-suggestion:hover {
-  background-color: #f1f1f1;
+#sidebar h5 {
+  color: #fff;
+  margin-bottom: 1rem;
+}
+
+#sidebar .nav-link {
+  color: #CED4DA;
+  font-size: 16px;
+  padding: 10px 20px;
+}
+
+#sidebar .nav-link:hover {
+  color: var(--color-bg);
+  background-color: var(--color-tertiary);
+  border-radius: 4px;
+}
+
+/* Área de Conteúdo */
+#content {
+  margin-left: 250px;
+  padding: 20px;
+  transition: margin-left var(--transition-speed);
+}
+
+@media (max-width: 768px) {
+  #sidebar {
+    display: none;
+  }
+  #content {
+    margin-left: 0;
+  }
+}
+
+/* Navbar Offcanvas para Mobile */
+.navbar {
+  background-color: var(--color-secondary);
+}
+/* Variáveis Globais */
+:root {
+  --color-primary: #151B26;      /* Texto e destaques */
+  --color-tertiary: #6D8BA6;       /* Botões, interações */
+  --color-quaternary: #9CC1D9;     /* Efeitos de hover e links */
+}
+
+/* Barra de Busca */
+.search-bar {
+  max-width: 500px;
+  margin: 20px auto;  /* Centralizado com espaçamento vertical */
+  position: relative;
+}
+
+.search-input {
+  width: 100%;
+  height: 45px;
+  padding: 10px 50px 10px 20px;  /* Espaço à direita para o botão */
+  border: 1px solid #ced4da;
+  border-radius: 30px;  /* Borda bem arredondada */
+  font-size: 1rem;
+  transition: box-shadow 0.25s ease, border-color 0.25s ease;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: var(--color-tertiary);
+  box-shadow: 0 0 0 3px rgba(109, 139, 166, 0.25);
+}
+
+.search-icon-button {
+  position: absolute;
+  top: 50%;
+  right: 10px;  /* Espaço para harmonia */
+  width: 40px;
+  height: 40px;
+  background-color: var(--color-tertiary);
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: translateY(-50%);
+  transition: background-color 0.25s ease, transform 0.25s ease;
+  z-index: 10;
+}
+
+.search-icon-button:hover {
+  background-color: var(--color-quaternary);
+}
+
+.search-icon-button:active {
+  transform: translateY(-50%) scale(0.95);
+}
+
+.search-icon-button i {
+  font-size: 1rem;
+}
+
+/* Animações suaves para elementos de temperatura e dados */
+#temp-principal,
+#temp-max,
+#temp-min,
+#umidade,
+#vento,
+#descricao-principal,
+#icone-principal {
+  transition: opacity var(--transition-speed) ease;
 }

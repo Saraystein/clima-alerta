@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Atualização de Clima</title>
+  <style>
+    /* Importa uma fonte moderna */
+    @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+    body {
+      font-family: 'Roboto', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f2f2f2;
+      color: #333;
+    }
+    .container {
+      max-width: 600px;
+      margin: 30px auto;
+      background: #fff;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    .header {
+      background: linear-gradient(90deg, #4facfe, #00f2fe);
+      padding: 20px;
+      text-align: center;
+      color: #fff;
+    }
+    .header h1 {
+      margin: 0;
+      font-size: 28px;
+    }
+    .content {
+      padding: 20px;
+      line-height: 1.6;
+    }
+    .content p {
+      margin: 0 0 10px;
+    }
+    /* Container para os dados e a logo */
+    .info-container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .stats {
+      background: #f9f9f9;
+      padding: 12px 15px;
+      margin: 20px 0;
+      border-radius: 4px;
+      list-style: none;
+      flex: 1;
+    }
+    .stats li {
+      font-size: 16px;
+      margin: 5px 0;
+    }
+    .info-logo {
+      margin-left: 20px;
+      text-align: center;
+    }
+    .info-logo img {
+      max-width: 100px;
+    }
+    .footer {
+      text-align: center;
+      padding: 12px;
+      font-size: 12px;
+      color: #999;
+      background: #f2f2f2;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Atualização de Clima</h1>
+    </div>
+    <div class="content">
+      <p>Olá {{ nome }},</p>
+      <p>Aqui está a atualização do clima para <strong>{{ cidade }}</strong>:</p>
+      <div class="info-container">
+        <ul class="stats">
+          <li><strong>Temperatura:</strong> {{ temp }}°C</li>
+          <li><strong>Condição:</strong> {{ descricao }}</li>
+        </ul>
+        <div class="info-logo">
+          <!-- Coloque a URL absoluta da sua logo -->
+          <img src="https://i.imgur.com/KNsxCgG.png/static/imgs/logo.png" alt="Logo Clima Conexão">
+        </div>
+      </div>
+      <p>Fique atento às condições e se prepare conforme necessário!</p>
+    </div>
+    <div class="footer">
+      <p>&copy; 2025 Conexão Climatica. Todos os direitos reservados.</p>
+    </div>
+  </div>
+</body>
+</html>

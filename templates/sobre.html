@@ -2,52 +2,70 @@
 {% block title %}Sobre - Conexão Climática{% endblock %}
 
 {% block content %}
-<div class="container">
-  <div class="card shadow">
-    <div class="card-body">
-      <div class="d-flex align-items-center mb-4">
-        <img src="{{ url_for('static', filename='imgs/avatar.png') }}" class="rounded-circle me-3" width="80" height="80" alt="Criador">
-        <div>
-          <h5 class="mb-0">Gustavo Silvério Saray</h5>
-          <span class="badge bg-warning text-dark">🚧 Em desenvolvimento</span>
+<div class="container my-5">
+  <div class="row justify-content-center">
+    <div class="col-md-10 col-lg-8">
+      <div class="card shadow-sm border-0">
+        <div class="card-body p-4">
+          <!-- Informações do Criador -->
+          <div class="d-flex align-items-center mb-4">
+            <img src="{{ url_for('static', filename='imgs/avatar.png') }}" class="rounded-circle me-3" width="80" height="80" alt="Criador">
+            <div>
+              <h4 class="mb-0">Gustavo Silvério Saray</h4>
+              <span class="badge bg-warning text-dark">🚧 Em desenvolvimento</span>
+            </div>
+          </div>
+          
+          <hr>
+          
+          <!-- Seção: O que é o Conexão Climática? -->
+          <section class="mb-4">
+            <h5 class="text-primary mb-2"><i class="fas fa-sun me-2"></i>O que é o Conexão Climática?</h5>
+            <p>
+              O <strong>Conexão Climática</strong> é uma plataforma inteligente de consulta do tempo, 
+              projetada para estudantes, professores e todos que desejam se preparar melhor para as mudanças climáticas do dia a dia. 
+              Nosso objetivo é garantir acesso rápido e atualizado a informações meteorológicas, ajudando na tomada de decisão para o seu dia.
+            </p>
+          </section>
+          
+          <!-- Seção: Objetivo -->
+          <section class="mb-4">
+            <h5 class="text-primary mb-2"><i class="fas fa-bullseye me-2"></i>Objetivo</h5>
+            <p>
+              Nossa missão é facilitar o acesso à previsão do tempo de forma prática, moderna e visualmente agradável. 
+              Reunimos dados atualizados, gráficos interativos e curiosidades meteorológicas para que você possa se preparar melhor para o que está por vir.
+            </p>
+          </section>
+          
+          <!-- Seção: Tecnologias Utilizadas -->
+          <section class="mb-4">
+            <h5 class="text-primary mb-2"><i class="fas fa-code me-2"></i>Tecnologias Utilizadas</h5>
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item border-0 ps-0">🌐 <strong>HTML</strong>, <strong>CSS</strong>, <strong>JS</strong> (Frontend)</li>
+              <li class="list-group-item border-0 ps-0">🎨 <strong>Bootstrap 5</strong> para um layout responsivo</li>
+              <li class="list-group-item border-0 ps-0">🧠 <strong>Flask (Python)</strong> no Backend</li>
+              <li class="list-group-item border-0 ps-0">☁️ <strong>API OpenWeatherMap</strong> para dados meteorológicos</li>
+              <li class="list-group-item border-0 ps-0">📊 <strong>Chart.js</strong> para gráficos interativos</li>
+            </ul>
+          </section>
+          
+          <!-- Seção: Redes Sociais -->
+          <section class="mb-3">
+            <h5 class="text-primary mb-2"><i class="fas fa-share-alt me-2"></i>Redes Sociais</h5>
+            <p>
+              <a href="https://github.com/Saraystein" class="btn btn-outline-dark btn-sm me-2" target="_blank">
+                <i class="fab fa-github me-1"></i>GitHub
+              </a>
+              <a href="https://www.linkedin.com/in/gustavo-saray-915564366/" class="btn btn-outline-primary btn-sm me-2" target="_blank">
+                <i class="fab fa-linkedin me-1"></i>LinkedIn
+              </a>
+              <a href="https://www.instagram.com/guh2ss/" class="btn btn-outline-danger btn-sm" target="_blank">
+                <i class="fab fa-instagram me-1"></i>Instagram
+              </a>
+            </p>
+          </section>
         </div>
       </div>
-
-      <section class="mb-4">
-        <h6 class="text-primary"><i class="fas fa-sun me-2"></i>O que é o Conexão Climática?</h6>
-        <p>O Conexão Climática é uma plataforma inteligente de consulta do tempo, projetada para estudantes, professores e qualquer pessoa que deseje se preparar melhor para as mudanças climáticas no dia a dia.</p>
-      </section>
-
-      <section class="mb-4">
-        <h6 class="text-primary"><i class="fas fa-bullseye me-2"></i>Objetivo</h6>
-        <p>O Conexão Climática tem como missão facilitar o acesso à previsão do tempo de forma prática, moderna e visualmente amigável. O site reúne dados atualizados de clima, gráficos interativos, curiosidades meteorológicas para ajudar usuários a se prepararem melhor para o dia.</p>
-      </section>
-
-      <section class="mb-4">
-        <h6 class="text-primary"><i class="fas fa-code me-2"></i>Tecnologias Utilizadas</h6>
-        <ul class="list-unstyled">
-          <li>🌐 HTML, CSS, JS (Frontend)</li>
-          <li>🎨 Bootstrap 5 para layout responsivo</li>
-          <li>🧠 Flask (Python) no Backend</li>
-          <li>☁️ API OpenWeatherMap para dados meteorológicos</li>
-          <li>📊 Chart.js para gráficos futuros</li>
-        </ul>
-      </section>
-
-      <section class="mb-3">
-        <h6 class="text-primary"><i class="fas fa-share-alt me-2"></i>Redes Sociais</h6>
-        <p class="mb-0">
-          <a href="https://github.com/seu-usuario" class="text-decoration-none me-3" target="_blank">
-            <i class="fab fa-github me-1"></i>GitHub
-          </a>
-          <a href="https://linkedin.com/in/seu-usuario" class="text-decoration-none me-3" target="_blank">
-            <i class="fab fa-linkedin me-1"></i>LinkedIn
-          </a>
-          <a href="https://instagram.com/seu-usuario" class="text-decoration-none" target="_blank">
-            <i class="fab fa-instagram me-1"></i>Instagram
-          </a>
-        </p>
-      </section>
     </div>
   </div>
 </div>

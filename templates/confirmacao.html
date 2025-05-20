@@ -2,9 +2,27 @@
 {% block title %}Cadastro Confirmado{% endblock %}
 
 {% block content %}
-<div class="container mt-5 text-center">
-  <h2 class="text-success mb-4">✅ Cadastro realizado com sucesso!</h2>
-  <p>Você receberá alertas climáticos para <strong>{{ cidade }}</strong> no e-mail <strong>{{ email }}</strong>.</p>
-  <a href="/" class="btn btn-outline-primary mt-3">Voltar para a página inicial</a>
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+      <div class="card shadow-sm border-0">
+        <div class="card-header bg-success text-white text-center py-3">
+          <h2 class="mb-0">
+            <i class="fas fa-check-circle me-2"></i>
+            Cadastro Realizado com Sucesso!
+          </h2>
+        </div>
+        <div class="card-body text-center">
+          <p class="lead">
+            Você receberá alertas climáticos para <strong>{{ cidade }}</strong> no e-mail <strong>{{ email }}</strong>.
+          </p>
+          <a href="/" class="btn btn-outline-success btn-lg mt-3">
+            <i class="fas fa-home me-1"></i>
+            Voltar para a Página Inicial
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 {% endblock %}

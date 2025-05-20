@@ -3,34 +3,30 @@
 <head>
   <meta charset="UTF-8">
   <title>{% block title %}Conexão Climática{% endblock %}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  
+  <!-- Bootstrap 5 CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  <style>
-    body, html {
-      height: 100%;
-      margin: 0;
-    }
-    #sidebar {
-      height: 100vh;
-      width: 220px;
-      position: fixed;
-      top: 0;
-      left: 0;
-      background-color: #f8f9fa;
-      padding-top: 60px;
-      box-shadow: 2px 0 5px rgba(0,0,0,0.1);
-    }
-    #content {
-      margin-left: 220px;
-      padding: 20px;
-    }
-  </style>
+  
+  <!-- Google Fonts: Roboto -->
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  
+  <!-- Font Awesome CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-..." crossorigin="anonymous" referrerpolicy="no-referrer">
+  
+  <!-- Custom CSS (coloque suas regras customizadas em static/css/style.css) -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
-
-  <div id="sidebar">
-    <h5 class="text-center mt-3">🌍 Conexão Climatica </h5>
-    <ul class="nav flex-column mt-4">
-      <li class="nav-item"><a class="nav-link" href="{{ url_for('index') }}">Início</a></li>
+  <!-- Sidebar para telas grandes -->
+  <div id="sidebar" class="d-none d-md-block">
+    <div class="text-center">
+      <h5>🌍 Conexão Climática</h5>
+    </div>
+    <ul class="nav flex-column">
+      <li class="nav-item">
+        <a class="nav-link" href="{{ url_for('index') }}">Início</a>
+      </li>
       <li class="nav-item">
         {% if clima %}
           <a class="nav-link" href="{{ url_for('noticias', cidade=clima.cidade) }}">Notícias</a>
@@ -40,14 +36,59 @@
           <a class="nav-link" href="{{ url_for('noticias') }}">Notícias</a>
         {% endif %}
       </li>
-      <li class="nav-item"><a class="nav-link" href="{{ url_for('alerta') }}">Alertas</a></li>
-      <li class="nav-item"><a class="nav-link" href="{{ url_for('sobre') }}">Sobre</a></li>
+      <li class="nav-item">
+        <a class="nav-link" href="{{ url_for('alerta') }}">Alertas</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{{ url_for('sobre') }}">Sobre</a>
+      </li>
     </ul>
   </div>
-
+  
+  <!-- Navbar Offcanvas para Mobile -->
+  <nav class="navbar navbar-dark d-md-none">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">Conexão Climática</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileSidebar" aria-controls="mobileSidebar">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+    </div>
+  </nav>
+  <div class="offcanvas offcanvas-start" tabindex="-1" id="mobileSidebar" aria-labelledby="offcanvasSidebarLabel">
+    <div class="offcanvas-header">
+      <h5 class="offcanvas-title" id="offcanvasSidebarLabel">Conexão Climática</h5>
+      <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Fechar"></button>
+    </div>
+    <div class="offcanvas-body">
+      <ul class="nav flex-column">
+        <li class="nav-item">
+          <a class="nav-link" href="{{ url_for('index') }}">Início</a>
+        </li>
+        <li class="nav-item">
+          {% if clima %}
+            <a class="nav-link" href="{{ url_for('noticias', cidade=clima.cidade) }}">Notícias</a>
+          {% elif cidade %}
+            <a class="nav-link" href="{{ url_for('noticias', cidade=cidade) }}">Notícias</a>
+          {% else %}
+            <a class="nav-link" href="{{ url_for('noticias') }}">Notícias</a>
+          {% endif %}
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{{ url_for('alerta') }}">Alertas</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{{ url_for('sobre') }}">Sobre</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+  
+  <!-- Área de Conteúdo Principal -->
   <div id="content">
     {% block content %}{% endblock %}
   </div>
-
+  
+  <!-- Bootstrap JS Bundle com Popper -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

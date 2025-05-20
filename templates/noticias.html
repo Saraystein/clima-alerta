@@ -3,30 +3,37 @@
 
 {% block content %}
 <div class="container mt-4">
-  <h2 class="mb-4">📰 Notícias sobre clima em {{ cidade }}</h2>
+  <h2 class="mb-4 text-center">📰 Notícias sobre clima em {{ cidade }}</h2>
 
   {% if artigos %}
-    <div class="row">
+    <div class="row gy-4">
       {% for noticia in artigos %}
-        <div class="col-md-6 mb-4">
-          <div class="card h-100">
+        <div class="col-md-6">
+          <div class="card h-100 shadow-sm">
             {% if noticia.urlToImage %}
-              <img src="{{ noticia.urlToImage }}" class="card-img-top" alt="imagem da notícia">
+              <img src="{{ noticia.urlToImage }}" class="card-img-top img-fluid" alt="Imagem da notícia">
             {% endif %}
             <div class="card-body">
               <h5 class="card-title">{{ noticia.title }}</h5>
               <p class="card-text">{{ noticia.description }}</p>
-              <a href="{{ noticia.url }}" class="btn btn-primary" target="_blank">Leia mais</a>
             </div>
-            <div class="card-footer text-muted small">
-              Publicado em {{ noticia.publishedAt[:10] | replace('-', '/') }}
+            <div class="card-footer d-flex justify-content-between align-items-center">
+              <small class="text-muted">
+                Publicado em {{ noticia.publishedAt[:10] | replace('-', '/') }}
+              </small>
+              <a href="{{ noticia.url }}" class="btn btn-sm btn-primary" target="_blank">
+                <i class="fas fa-external-link-alt me-1"></i> Leia mais
+              </a>
             </div>
           </div>
         </div>
       {% endfor %}
     </div>
   {% else %}
-    <div class="alert alert-warning">Nenhuma notícia encontrada para "{{ cidade }}".</div>
+    <div class="alert alert-warning text-center">
+      <i class="fas fa-exclamation-triangle me-2"></i>
+      Nenhuma notícia encontrada para "{{ cidade }}".
+    </div>
   {% endif %}
 </div>
 {% endblock %}
